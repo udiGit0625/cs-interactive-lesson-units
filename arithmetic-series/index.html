@@ -1,0 +1,92 @@
+<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>סכום סדרה חשבונית ויעילות זמן ריצה</title><style>
+:root{--blue:#3057cb;--ink:#17233c;--border:#d9e1ee;--bg:#f3f6fb;--green:#087c57}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,sans-serif;line-height:1.6}header{background:linear-gradient(120deg,#193761,#3159c9);color:white;padding:34px 5%}header h1{font-size:clamp(26px,4vw,46px);margin:5px 0}header p{font-size:19px}nav{background:white;padding:12px;display:flex;gap:10px;overflow:auto;position:sticky;top:0;z-index:2;box-shadow:0 2px 8px #17233c1c}nav a{white-space:nowrap;border:1px solid var(--border);padding:7px 12px;border-radius:30px;text-decoration:none;color:#274581}main{max-width:1050px;margin:auto;padding:18px}section{background:white;border:1px solid var(--border);border-radius:20px;padding:25px;margin:22px 0;scroll-margin-top:76px;box-shadow:0 5px 20px #17233c09}h2{margin-top:0;font-size:27px}h3{font-size:19px}.eyebrow{font-size:13px;color:var(--blue);font-weight:bold}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:16px}.panel{background:#fbfcff;padding:17px;border:1px solid var(--border);border-radius:16px}.math{direction:ltr;unicode-bidi:isolate;display:inline-block}.formula{direction:ltr;text-align:center;background:#f1f5ff;border-radius:14px;padding:16px;margin:12px 0;font-size:22px;font-weight:bold}.note{background:#edf6ff;border:1px solid #d4e6fb;border-radius:12px;padding:12px;margin:12px 0}.good{background:#e8f7ef;border:1px solid #c3e7d2;border-radius:12px;padding:12px;margin:12px 0}input,select{font-size:17px;padding:8px;border-radius:9px;border:1px solid #cbd5e1;max-width:100%}input[type=range]{width:100%}input[type=number]{width:110px}input[type=text]{width:180px}button{border:0;border-radius:10px;padding:10px 15px;background:var(--blue);color:white;font-size:15px;cursor:pointer}.terms{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.term{border:1px solid #cdd9ef;border-radius:8px;padding:6px 9px;background:white}pre{direction:ltr;text-align:left;background:#111b2c;color:white;padding:16px;border-radius:12px;overflow:auto;font-size:15px}.square{display:grid;gap:3px;width:max-content;max-width:100%;background:#dce4f0;padding:3px;border-radius:10px}.square-layout{display:flex;direction:ltr;gap:10px;align-items:flex-start;overflow-x:auto;padding:4px 0}.row-counts{display:flex;flex-direction:column;gap:3px;direction:ltr}.row-count{height:34px;min-width:46px;display:flex;align-items:center;font-weight:700;color:#263e83;font-size:16px}.row-sum{direction:ltr;text-align:left;margin:12px 0;font-weight:700;color:#2449b5;overflow-wrap:anywhere}.cell{width:34px;height:34px;background:white;border-radius:5px}.cell.mark{background:var(--blue)}.cell.diagonal{outline:2px solid orange;outline-offset:-2px}.answer{display:none;margin-top:12px}.feedback{font-weight:bold;min-height:25px}.exercise{border:1px solid var(--border);padding:15px;border-radius:14px;margin:12px 0}.foot{text-align:center;padding:20px;color:#5f6f88;font-weight:normal}</style></head><body>
+<header><div class="eyebrow" style="color:#d6e0ff">יחידת לימוד אינטראקטיבית • מדעי המחשב • יעילות אלגוריתמים</div><h1>כיצד מחשבים סכום של סדרה חשבונית?</h1><p>מהסדרה הכללית אל הסכומים <span class="math">1 + 2 + ... + n</span> ו־<span class="math">0 + 1 + ... + (n-1)</span>, ומשם אל ניתוח זמן ריצה וסיבוכיות בשפת C#.</p></header>
+<nav><a href="#s1">1. סדרה כללית</a><a href="#s2">2. מ־1 עד n</a><a href="#s3">3. מ־0 עד n−1</a><a href="#s4">4. טבלה ריבועית</a><a href="#s5">5. דוגמאות C#</a><a href="#s6">6. תרגול</a></nav><main>
+<section id="s1"><div class="eyebrow">שלב 1</div><h2>הסכום של סדרה חשבונית כללית</h2><p>בסדרה חשבונית ההפרש בין כל שני איברים סמוכים הוא קבוע. נסמן את האיבר הראשון ב־<span class="math">a₁</span>, את ההפרש ב־<span class="math">d</span>, ואת מספר האיברים ב־<span class="math">n</span>.</p><div class="grid"><div class="panel"><label>איבר ראשון <span class="math">a₁</span> <input id="a" type="number" value="3"></label><p><label>הפרש <span class="math">d</span> <input id="d" type="number" value="4"></label></p><p><label>מספר איברים <span class="math">n</span> <input id="ng" type="number" min="1" max="20" value="6"></label></p><button onclick="general()">חשב והצג</button></div><div class="panel"><h3>איברי הסדרה</h3><div class="terms" id="terms"></div><div class="formula" id="gf"></div></div></div><div class="formula">Sₙ = n(a₁ + aₙ)/2</div><p class="note">הרעיון: מחברים את האיבר הראשון עם האחרון, השני עם הלפני־אחרון וכן הלאה. סכום כל זוג שווה.</p><p><strong>במילים:</strong> סכום סדרה חשבונית הוא <strong>מכפלת מחצית מספר האיברים בסכום האיבר הראשון והאיבר האחרון בסדרה</strong>.</p></section>
+<section id="s2"><div class="eyebrow">שלב 2</div><h2>סכום המספרים מ־1 עד n</h2><p>בסדרה זו: איבר ראשון <span class="math">a₁ = 1</span>, איבר אחרון <span class="math">aₙ = n</span>, מספר האיברים <span class="math">n</span>.</p><div class="formula">1 + 2 + ... + n = n(n+1)/2</div><div class="grid"><div class="panel"><label>בחרו את n: <strong id="v1"></strong></label><input type="range" min="1" max="20" value="8" id="n1" oninput="sumOne()"><div class="formula" id="sumone"></div></div><div class="panel"><h3>זוגות בעלי אותו סכום</h3><div id="pairs"></div></div></div></section>
+<section id="s3"><div class="eyebrow">שלב 3</div><h2>סכום המספרים מ־0 עד n−1</h2><p>בסדרה זו: איבר ראשון <span class="math">a₁ = 0</span>, איבר אחרון <span class="math">aₙ = n−1</span>, מספר האיברים <span class="math">n</span>.</p><div class="formula">0 + 1 + ... + (n−1) = n(n−1)/2</div><div class="grid"><div class="panel"><label>בחרו את n: <strong id="v0"></strong></label><input type="range" min="1" max="20" value="8" id="n0" oninput="sumZero()"><div class="formula" id="sumzero"></div></div><div class="panel"><p>אפשר לחשב על ידי הפחתת n מהסכום <span class="math">1+2+...+n</span>:</p><div class="formula">n(n+1)/2 − n = n(n−1)/2</div></div></div></section>
+<section id="s4"><div class="eyebrow">שלב 4</div><h2>המחשה בטבלה ריבועית</h2><p>טבלה בגודל <span class="math">n × n</span> מאפשרת לראות את שני הסכומים: כולל האלכסון מקבלים <span class="math">1+2+...+n</span>; מתחת לאלכסון בלבד מקבלים <span class="math">0+1+...+(n−1)</span>.</p><div class="grid"><div class="panel"><label>גודל הטבלה: <strong id="vn"></strong></label><input id="sqn" type="range" min="2" max="10" value="6" oninput="square()"><p><label>כמה תאים</label><select id="mode" onchange="square()"><option value="strict">מתחת לאלכסון</option><option value="inclusive">עד האלכסון (כולל)</option></select></p><div class="note">החליפו בין שתי האפשרויות, הסתכלו על מספר התאים בכל שורה ונסו להגיע לנוסחה.</div><div class="formula" id="sqformula"></div><div class="note" id="sqexplain"></div></div><div class="panel"><div class="square-layout"><div class="square" id="square"></div><div class="row-counts" id="rowCounts"></div></div><div id="rowSum" class="row-sum" aria-live="polite"></div><p>כחול: תא נספר. מסגרת כתומה: תא אלכסון. המספרים ליד השורות מציינים כמה תאים כחולים יש בכל שורה.</p></div></div></section>
+<section id="s5"><div class="eyebrow">שלב 5</div><h2>מחברים את הרעיון לחישוב יעילות ב־C#</h2><p>בניתוח יעילות מזהים תחילה את <strong>הצעד הבסיסי</strong> — הפעולה שאת מספר ביצועיה אנו סופרים. מן הספירה מסיקים את סדר הגודל של פונקציית זמן הריצה, ולבסוף רושמים את הסיבוכיות בסימון <span class="math">O</span>.</p><div class="grid"><div class="panel"><h3>דוגמה א׳: 1 עד n</h3><pre>int count = 0;
+for (int i = 1; i &lt;= n; i++)
+{
+    for (int j = 1; j &lt;= i; j++)
+    {
+        count++;
+    }
+}</pre><button onclick="toggle('a1')">הצג / הסתר פתרון</button><div class="answer" id="a1"><div class="formula">1+2+...+n = n(n+1)/2</div><p>מספר ביצועי הצעד הבסיסי הוא בדיוק <span class="math">n(n+1)/2</span>. מספר זה הוא מסדר גודל ריבועי, ולכן סיבוכיות זמן הריצה היא <span class="math">O(n²)</span>.</p></div></div><div class="panel"><h3>דוגמה ב׳: 0 עד n−1</h3><pre>int count = 0;
+for (int i = 0; i &lt; n; i++)
+{
+    for (int j = 0; j &lt; i; j++)
+    {
+        count++;
+    }
+}</pre><button onclick="toggle('a2')">הצג / הסתר פתרון</button><div class="answer" id="a2"><div class="formula">0+1+...+(n−1) = n(n−1)/2</div><p>מספר ביצועי הצעד הבסיסי הוא בדיוק <span class="math">n(n−1)/2</span>. מספר זה הוא מסדר גודל ריבועי, ולכן סיבוכיות זמן הריצה היא <span class="math">O(n²)</span>.</p></div></div></div><div class="note"><strong>הבחנה בין הצעד הבסיסי לבין פונקציית זמן הריצה:</strong> בדוגמאות ספרנו את מספר ביצועי הצעד הבסיסי בלבד, ולא את פונקציית זמן הריצה. לצורך חישוב פונקציית זמן הריצה המדויקת צריך להביא בחשבון גם את שאר ההוראות (אתחולים, בדיקות תנאי והגדלות מונים), בהתאם לכללי הספירה שנקבעו. בשתי הדוגמאות הן אינן משנות את סדר הגודל: <span class="math">O(n²)</span>.</div></section>
+<section id="s6"><div class="eyebrow">שלב 6</div><h2>תרגול עצמי עם בדיקת תשובות</h2><div class="exercise"><p><b>1.</b> מהו הסכום <span class="math">1+2+...+15</span>?</p><input id="e1" type="text" placeholder="תשובה מספרית"> <button onclick="check('e1','f1','120','חשבו לפי n(n+1)/2')">בדוק</button><div id="f1" class="feedback"></div></div><div class="exercise"><p><b>2.</b> מהו הסכום <span class="math">0+1+...+11</span>?</p><input id="e2" type="text" placeholder="תשובה מספרית"> <button onclick="check('e2','f2','66','יש כאן 12 איברים')">בדוק</button><div id="f2" class="feedback"></div></div><div class="exercise"><p><b>3.</b> חשבו את סכום הסדרה <span class="math">5, 8, 11, 14, 17, 20</span>.</p><input id="e3" type="text" placeholder="תשובה מספרית"> <button onclick="check('e3','f3','75','חברו את הראשון והאחרון והכפילו בחצי ממספר האיברים')">בדוק</button><div id="f3" class="feedback"></div></div><div class="exercise"><p><b>4.</b> לפניכם קטע קוד בשפת C# הסוכם ומדפיס את סכום איברי המערך הדו־ממדי הריבועי <span class="math">mat</span> הנמצאים מתחת לאלכסון הראשי. חשבו את מספר הפעמים שמתבצע הצעד הבסיסי ואת הסיבוכיות של קטע הקוד.</p><pre>int n = mat.GetLength(0);
+int sum = 0;
+for (int i = 0; i &lt; n; i++)
+{
+    for (int j = 0; j &lt; i; j++)
+    {
+        sum = sum + mat[i, j];
+    }
+}
+Console.WriteLine(sum);</pre><p>מספר הביצועים של הצעד הבסיסי: <input type="text" id="e4a" placeholder="ביטוי ב-n"></p><p>סיבוכיות: <input type="text" id="e4b" placeholder="O(...)" dir="ltr" autocomplete="off" aria-label="סיבוכיות זמן ריצה"></p><button onclick="check4()">בדוק</button><div id="f4" class="feedback"></div><details><summary>הצגת פתרון</summary><p>הצעד הבסיסי הוא <span class="math">sum = sum + mat[i, j]</span>. עבור <span class="math">i=0</span> הוא אינו מתבצע; עבור <span class="math">i=1</span> הוא מתבצע פעם אחת, וכן הלאה, עד <span class="math">i=n−1</span> שבו הוא מתבצע <span class="math">n−1</span> פעמים. לכן מספר הביצועים של הצעד הבסיסי הוא <span class="math">0+1+...+(n−1) = n(n−1)/2</span>, והסיבוכיות של קטע הקוד היא <span class="math">O(n²)</span>.</p></details></div></section><footer class="foot">פותח על ידי <strong>אודי עומר</strong> | נובמבר 2026</footer></main>
+<script>
+const $=id=>document.getElementById(id);
+function general(){let a=Number($('a').value),d=Number($('d').value),n=Math.max(1,Math.min(20,Number($('ng').value)||1));$('ng').value=n;let ar=Array.from({length:n},(_,i)=>a+i*d);$('terms').innerHTML=ar.map((x,i)=>`<span class="term">${x}</span>${i===n-1?'':' + '}`).join('');$('gf').textContent=`S = ${n} × (${a} + ${ar[n-1]}) / 2 = ${n*(a+ar[n-1])/2}`}
+function sumOne(){let n=+$('n1').value;$('v1').textContent=n;$('sumone').textContent=`${n} × (${n}+1) / 2 = ${n*(n+1)/2}`;let s='';for(let j=1;j<=Math.floor(n/2);j++)s+=`<p class="term math">${j} + ${n+1-j} = ${n+1}</p>`;if(n%2)s+=`<p>נשאר האיבר האמצעי ${Math.ceil(n/2)}</p>`;$('pairs').innerHTML=s}
+function sumZero(){let n=+$('n0').value;$('v0').textContent=n;$('sumzero').textContent=`${n} × (${n}−1) / 2 = ${n*(n-1)/2}`}
+function square(){
+  let n=+$('sqn').value,mode=$('mode').value,el=$('square'),counts=$('rowCounts'),sum=0;
+  $('vn').textContent=n;
+  el.innerHTML='';counts.innerHTML='';
+  el.style.gridTemplateColumns=`repeat(${n},34px)`;
+  const rowNumbers=[];
+  for(let r=0;r<n;r++){
+    let rowCount=0;
+    for(let c=0;c<n;c++){
+      let x=document.createElement('div');
+      let yes=mode==='strict'?c<r:c<=r;
+      x.className='cell'+(yes?' mark':'')+(r===c?' diagonal':'');
+      el.appendChild(x);
+      if(yes){sum++;rowCount++;}
+    }
+    rowNumbers.push(rowCount);
+    let label=document.createElement('div');
+    label.className='row-count';
+    label.textContent=rowCount+(r<n-1?' +':'');
+    label.setAttribute('aria-label',`שורה ${r+1}: ${rowCount} תאים כחולים`);
+    counts.appendChild(label);
+  }
+  $('rowSum').textContent=rowNumbers.join(' + ')+' = '+sum;
+  $('sqformula').textContent=mode==='strict'?`${n}(${n}−1)/2 = ${sum}`:`${n}(${n}+1)/2 = ${sum}`;
+  $('sqexplain').textContent=mode==='strict'?`בשורות נספרים 0,1,...,${n-1} תאים. סכומם ${sum}.`:`בשורות נספרים 1,2,...,${n} תאים. סכומם ${sum}.`;
+}
+function toggle(id){let x=$(id);x.style.display=x.style.display==='block'?'none':'block'}
+function check(id,out,expected,hint){let yes=$(id).value.trim()===expected;$(out).textContent=yes?'✓ נכון':`לא מדויק. רמז: ${hint}`;$(out).style.color=yes?'#087c57':'#b83242'}
+// הפיכת דרך הקלדה מקובלת של חזקה לכתיב מתמטי, מבלי לשנות את התשובה.
+$('e4b').addEventListener('input', function(){
+  const start=this.selectionStart;
+  const before=this.value;
+  const after=before.replace(/\^2/g,'²');
+  if(after!==before){
+    this.value=after;
+    if(start!==null){
+      const newPos=before.slice(0,start).replace(/\^2/g,'²').length;
+      this.setSelectionRange(newPos,newPos);
+    }
+  }
+});
+function check4(){
+  const a=$('e4a').value.replace(/\s+/g,'').replace(/\*/g,'').replace(/−/g,'-');
+  const b=$('e4b').value.replace(/\s+/g,'').toLowerCase().replace(/\^2/g,'²');
+  const countOK=['n(n-1)/2','(n(n-1))/2','(n²-n)/2','(n^2-n)/2','n(n-1)÷2','(n*n-n)/2','n²/2-n/2','(n²-n)÷2'].includes(a);
+  const complexityOK=['o(n²)','o(n*n)'].includes(b);
+  const out=[];
+  out.push(countOK?'✓ מספר הביצועים של הצעד הבסיסי נכון.':'מספר הביצועים של הצעד הבסיסי אינו נכון. בדקו את מספר הריצות של הלולאה הפנימית עבור i=0 ועד i=n−1.');
+  out.push(complexityOK?'✓ הסיבוכיות O(n²) נכונה.':'הסיבוכיות אינה נכונה. בדקו איזה איבר קובע את סדר הגודל.');
+  $('f4').innerHTML=out.join('<br>');
+  $('f4').style.color=countOK&&complexityOK?'#087c57':'#b83242';
+}
+general();sumOne();sumZero();square();
+</script></body></html>
